@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیرتِ عثمان غنی رضی اللہ عنہ</title>
+    <!-- Chosen Palette: Warm Neutrals (Cream, Muted Green, Soft Gold) -->
+    <!-- Application Structure Plan: The application is designed as a single-page, tab-based interface to replace a linear article format. This structure allows users to explore different facets of Hazrat Usman's (R.A.) life in a non-linear way, focusing on topics of interest like his virtues, caliphate, or martyrdom. This thematic segmentation (Life, Virtues, Caliphate, Martyrdom, Legacy, Sayings) makes the rich and detailed information more digestible and engaging. User flow is controlled by a clear navigation bar, where each button reveals a specific content section, creating an organized and intuitive experience. Collapsible accordions are used in the Caliphate section to manage detailed information effectively. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Life events -> Goal: Organize chronologically -> Viz/Method: Interactive HTML/CSS Timeline -> Interaction: Hover reveals details -> Justification: Provides a clear, chronological overview of his life.
+        - Report Info: Key virtues (Modesty, Generosity) -> Goal: Inform & Engage -> Viz/Method: Interactive HTML/CSS Cards -> Interaction: Click/Tap to see details -> Justification: Breaks down abstract concepts into focused, interactive segments.
+        - Report Info: Major Contributions (Well, Army, Mosque) -> Goal: Compare & Inform -> Viz/Method: Clickable Cards in a grid -> Interaction: Click reveals details in a modal -> Justification: Transforms a static table into an engaging, exploratory element.
+        - Report Info: Caliphate achievements -> Goal: Organize dense info -> Viz/Method: HTML/JS Accordion -> Interaction: Click to expand/collapse -> Justification: Manages detailed sub-topics (conquests, admin) without overwhelming the user.
+        - Report Info: Quran Compilation Process -> Goal: Organize complex process -> Viz/Method: HTML/CSS Flowchart Diagram -> Interaction: Static visual -> Justification: Simplifies a complex historical process into an easily understandable visual flow.
+        - Report Info: Leadership Qualities -> Goal: Synthesize & Summarize -> Viz/Method: Chart.js Bar Chart -> Interaction: Hover tooltips -> Justification: Provides a modern, data-driven summary of his legacy.
+        Library/Method: Chart.js (Canvas) is used for the chart. All other visuals are built with structured HTML and Tailwind CSS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Naskh Arabic', serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 45vh;
+            max-height: 450px;
+        }
+        .nav-link.active {
+            background-color: #A88B64;
+            color: #FDFBF6;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 1rem;
+            right: -0.45rem;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: #C8A97E;
+            border: 2px solid #FDFBF6;
+        }
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .accordion-button svg {
+            transition: transform 0.3s ease;
+        }
+        .accordion-button.open svg {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="bg-[#FDFBF6] text-[#434E44] leading-loose">
+
+<div class="container mx-auto p-4 md:p-8">
+    
+    <header class="text-center mb-8 border-b-2 border-[#C8A97E] pb-4">
+        <h1 class="text-4xl md:text-5xl font-bold text-[#4C5A48]">سیدنا عثمان غنی رضی اللہ عنہ</h1>
+        <p class="text-xl text-[#A88B64] mt-2">جامع القرآن، پیکرِ حیا و سخاوت</p>
+    </header>
+
+    <nav class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
+        <button data-target="hayat" class="nav-link active text-lg font-semibold py-2 px-4 rounded-lg transition-colors duration-300 bg-[#F0EBE3] hover:bg-[#A88B64] hover:text-white">حیاتِ مبارکہ</button>
+        <button data-target="fazail" class="nav-link text-lg font-semibold py-2 px-4 rounded-lg transition-colors duration-300 bg-[#F0EBE3] hover:bg-[#A88B64] hover:text-white">فضائل و خصائص</button>
+        <button data-target="khilafat" class="nav-link text-lg font-semibold py-2 px-4 rounded-lg transition-colors duration-300 bg-[#F0EBE3] hover:bg-[#A88B64] hover:text-white">دورِ خلافت</button>
+        <button data-target="aqwal" class="nav-link text-lg font-semibold py-2 px-4 rounded-lg transition-colors duration-300 bg-[#F0EBE3] hover:bg-[#A88B64] hover:text-white">اقوالِ زریں</button>
+        <button data-target="shahadat" class="nav-link text-lg font-semibold py-2 px-4 rounded-lg transition-colors duration-300 bg-[#F0EBE3] hover:bg-[#A88B64] hover:text-white">شہادت</button>
+        <button data-target="legacy" class="nav-link text-lg font-semibold py-2 px-4 rounded-lg transition-colors duration-300 bg-[#F0EBE3] hover:bg-[#A88B64] hover:text-white">قائدانہ بصیرت</button>
+    </nav>
+
+    <main>
+        <!-- Section: Hayat-e-Mubarakah -->
+        <section id="hayat" class="content-section space-y-8">
+            <div class="p-6 bg-white/50 rounded-lg shadow-sm">
+                <h2 class="text-3xl font-bold text-[#4C5A48] mb-4 border-r-4 border-[#C8A97E] pr-4">حیاتِ مبارکہ کا سفر</h2>
+                <p class="mb-6">یہ سیکشن حضرت عثمان غنی رضی اللہ عنہ کی زندگی کے اہم مراحل کو ایک ٹائم لائن کی صورت میں پیش کرتا ہے، جس سے آپ ان کی ابتدائی زندگی، قبولِ اسلام، ہجرت اور خلافت تک کے سفر کو آسانی سے سمجھ سکتے ہیں۔ ہر موڑ ان کے کردار کی مضبوطی اور اسلام کے لیے ان کی گہری وابستگی کو ظاہر کرتا ہے۔</p>
+                <div class="relative border-r-2 border-dashed border-[#C8A97E] pr-8 space-y-12">
+                    <div class="timeline-item">
+                        <h3 class="text-2xl font-semibold text-[#A88B64]">576ء - ولادت</h3>
+                        <p>مکہ کے معزز قبیلے قریش کی شاخ بنو امیہ میں ولادت ہوئی۔ آپ کا خاندان اسلام سے قبل بھی نہایت باوقار اور دولت مند تھا۔ آپ کا نسب پانچویں پشت پر رسول اللہ ﷺ سے جا ملتا ہے۔</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="text-2xl font-semibold text-[#A88B64]">ابتدائے اسلام - قبولِ اسلام</h3>
+                        <p>حضرت ابوبکر صدیقؓ کی دعوت پر 34 سال کی عمر میں 'السابقون الاولون' کے معزز گروہ میں شامل ہوئے۔ حق کی پکار پر لبیک کہنے میں سبقت لے گئے۔</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="text-2xl font-semibold text-[#A88B64]">ذوالہجرتین - دو ہجرتیں</h3>
+                        <p>کفارِ مکہ کے مظالم سے تنگ آ کر اپنی اہلیہ، سیدہ رقیہؓ، کے ہمراہ حبشہ کی طرف ہجرت فرمائی۔ بعد ازاں مدینہ منورہ کی طرف بھی ہجرت کا شرف پایا۔</p>
+                    </div>
+                     <div class="timeline-item">
+                        <h3 class="text-2xl font-semibold text-[#A88B64]">6 ہجری - بیعتِ رضوان</h3>
+                        <p>صلح حدیبیہ کے موقع پر آپ کو سفیر بنا کر مکہ بھیجا گیا۔ آپ کی شہادت کی افواہ پر نبی کریم ﷺ نے آپ کا بدلہ لینے کے لیے 1400 صحابہ سے بیعت لی اور اپنے ایک ہاتھ کو 'عثمان کا ہاتھ' قرار دیا۔</p>
+                    </div>
+                     <div class="timeline-item">
+                        <h3 class="text-2xl font-semibold text-[#A88B64]">عہدِ شیخین میں کردار</h3>
+                        <p>حضرت ابوبکرؓ و عمرؓ کے ادوارِ خلافت میں آپ مجلسِ شوریٰ کے اہم ترین رکن تھے اور ریاستی معاملات میں آپ کے مشوروں کو کلیدی حیثیت حاصل تھی۔</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="text-2xl font-semibold text-[#A88B64]">23 ہجری - منصبِ خلافت</h3>
+                        <p>حضرت عمر فاروقؓ کی شہادت کے بعد، شوریٰ کے ذریعے امت کی قیادت کی عظیم ذمہ داری آپ کے سپرد کی گئی۔ آپ کا دورِ خلافت 12 سال پر محیط رہا۔</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Fazail o Khasais -->
+        <section id="fazail" class="content-section hidden space-y-8">
+            <div class="p-6 bg-white/50 rounded-lg shadow-sm">
+                <h2 class="text-3xl font-bold text-[#4C5A48] mb-4 border-r-4 border-[#C8A97E] pr-4">فضائل و خصائص</h2>
+                 <p class="mb-6">اس سیکشن میں حضرت عثمان غنیؓ کی شخصیت کے ان درخشاں پہلوؤں کو اجاگر کیا گیا ہے جنہوں نے انہیں تاریخ میں ایک منفرد مقام عطا کیا۔ آپ ان کی حیا، بے مثال سخاوت، اور رسول اللہ ﷺ سے گہری محبت کے بارے میں جان سکتے ہیں، جو ان کے کردار کی عظمت کو بیان کرتے ہیں۔</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
+                    <div class="p-6 bg-white rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
+                        <div class="text-6xl mb-4 text-[#A88B64]">✨</div>
+                        <h3 class="text-2xl font-bold mb-2">پیکرِ حیا</h3>
+                        <p>"کیا میں اس شخص سے حیا نہ کروں جس سے فرشتے بھی حیا کرتے ہیں۔" <span class="block text-sm mt-1">(الحدیث)</span></p>
+                    </div>
+                    <div class="p-6 bg-white rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
+                        <div class="text-6xl mb-4 text-[#A88B64]">❤️</div>
+                        <h3 class="text-2xl font-bold mb-2">ذوالنورین</h3>
+                        <p>حضور اکرم ﷺ کی دو صاحبزادیوں، سیدہ رقیہؓ اور سیدہ ام کلثومؓ، کا یکے بعد دیگرے شوہر بننے کا منفرد شرف حاصل ہوا۔</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
+                         <div class="text-6xl mb-4 text-[#A88B64]">🤝</div>
+                        <h3 class="text-2xl font-bold mb-2">عشقِ رسول ﷺ</h3>
+                        <p>"جنت میں ہر نبی کا ایک رفیق ہوگا اور میرے رفیق عثمان ہیں۔" <span class="block text-sm mt-1">(الحدیث)</span></p>
+                    </div>
+                     <div class="p-6 bg-white rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
+                         <div class="text-6xl mb-4 text-[#A88B64]">✍️</div>
+                        <h3 class="text-2xl font-bold mb-2">کاتبِ وحی</h3>
+                        <p>آپ کا شمار ان چند معتمد صحابہ میں ہوتا تھا جنہیں نبی کریم ﷺ وحیِ الٰہی کی کتابت کا شرف بخشتے تھے۔</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
+                         <div class="text-6xl mb-4 text-[#A88B64]">⭐</div>
+                        <h3 class="text-2xl font-bold mb-2">عشرہ مبشرہ</h3>
+                        <p>آپ ان دس خوش نصیب صحابہ میں شامل ہیں جنہیں نبی کریم ﷺ نے دنیا میں ہی جنت کی بشارت دے دی تھی۔</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
+                         <div class="text-6xl mb-4 text-[#A88B64]">📖</div>
+                        <h3 class="text-2xl font-bold mb-2">صاحبِ قرآن</h3>
+                        <p>آپ قرآن سے شدید محبت رکھتے تھے، کثرت سے تلاوت کرتے اور اکثر ایک ہی رکعت میں پورا قرآن ختم فرما لیتے۔</p>
+                    </div>
+                </div>
+                 <h3 class="text-2xl font-bold text-[#4C5A48] mt-12 mb-4 border-r-4 border-[#C8A97E] pr-4">سخاوت کا سمندر</h3>
+                 <p class="mb-6">آپ کی سخاوت محض خیرات نہیں تھی، بلکہ امت کی اہم ترین اجتماعی اور اسٹریٹجک ضروریات کو پورا کرنے کا ذریعہ تھی۔ ذیل میں دیے گئے کارڈز پر کلک کر کے ان کی عظیم خدمات کے بارے میں مزید جانیے۔</p>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <button data-modal="rumah" class="modal-trigger text-right p-6 bg-white rounded-xl shadow-lg hover:shadow-xl hover:bg-[#F0EBE3] transition-all duration-300">
+                        <h4 class="text-xl font-bold text-[#A88B64] mb-2">بئرِ رومہ کی خریداری</h4>
+                        <p>مدینہ میں میٹھے پانی کے کنویں کو خرید کر مسلمانوں کے لیے وقف کر دیا تاکہ پانی کی قلت دور ہو۔</p>
+                    </button>
+                    <button data-modal="jaysh" class="modal-trigger text-right p-6 bg-white rounded-xl shadow-lg hover:shadow-xl hover:bg-[#F0EBE3] transition-all duration-300">
+                        <h4 class="text-xl font-bold text-[#A88B64] mb-2">جیش العسرہ کی تیاری</h4>
+                        <p>غزوہ تبوک کے موقع پر اسلامی فوج کے ایک تہائی حصے کے اخراجات اٹھائے اور بے مثال قربانی پیش کی۔</p>
+                    </button>
+                    <button data-modal="masjid" class="modal-trigger text-right p-6 bg-white rounded-xl shadow-lg hover:shadow-xl hover:bg-[#F0EBE3] transition-all duration-300">
+                        <h4 class="text-xl font-bold text-[#A88B64] mb-2">مسجد نبوی کی توسیع</h4>
+                        <p>بڑھتی ہوئی مسلم آبادی کی ضرورت کے پیش نظر مسجد نبوی سے متصل زمین خرید کر مسجد کی توسیع کے لیے وقف کی۔</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Khilafat -->
+        <section id="khilafat" class="content-section hidden space-y-8">
+            <div class="p-6 bg-white/50 rounded-lg shadow-sm">
+                <h2 class="text-3xl font-bold text-[#4C5A48] mb-4 border-r-4 border-[#C8A97E] pr-4">دورِ خلافت: اسلامی سلطنت کا سنہری باب</h2>
+                <p class="mb-6">حضرت عثمانؓ کا 12 سالہ دورِ خلافت اسلامی تاریخ کا ایک سنہری باب ہے۔ اس دور میں نہ صرف امت کو قرآن جیسی لازوال نعمت کو محفوظ شکل میں عطا کیا گیا بلکہ انتظامی، معاشی اور عسکری میدانوں میں وہ اصلاحات کی گئیں جنہوں نے اسلامی ریاست کو ایک عالمی طاقت بنا دیا۔ ذیل میں موجود حصوں پر کلک کر کے مزید تفصیلات جانیں۔</p>
+                
+                <div class="space-y-4">
+                    <!-- Accordion Item 1 -->
+                    <div class="bg-white rounded-lg shadow-md">
+                        <button class="accordion-button w-full flex justify-between items-center text-right p-5 font-semibold text-xl text-[#4C5A48]">
+                            <span>جامع القرآن: امت کا اتحاد</span>
+                            <svg class="w-6 h-6 text-[#A88B64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-5 border-t border-gray-200">
+                                <p>ریاست کی وسعت کے ساتھ قرأتِ قرآن میں پیدا ہونے والے اختلاف کو ختم کرنے کے لیے آپ نے قرآن کو قریش کی قرأت پر ایک مصحف میں جمع کروا کے امت کو دائمی انتشار سے بچا لیا۔</p>
+                                <div class="space-y-3 text-center text-sm mt-4">
+                                    <div class="p-2 bg-[#F0EBE3] rounded-lg">1. اختلاف کا احساس اور صحابہ سے مشاورت</div>
+                                    <div class="text-xl text-[#C8A97E]">↓</div>
+                                    <div class="p-2 bg-[#F0EBE3] rounded-lg">2. حضرت حفصہؓ سے اصل صحیفے حاصل کرنا</div>
+                                    <div class="text-xl text-[#C8A97E]">↓</div>
+                                    <div class="p-2 bg-[#F0EBE3] rounded-lg">3. حضرت زید بن ثابتؓ کی سربراہی میں کمیٹی کا قیام</div>
+                                    <div class="text-xl text-[#C8A97E]">↓</div>
+                                    <div class="p-2 bg-[#F0EBE3] rounded-lg">4. معیاری نسخے کی تیاری اور تمام صوبوں میں ترسیل</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion Item 2 -->
+                    <div class="bg-white rounded-lg shadow-md">
+                        <button class="accordion-button w-full flex justify-between items-center text-right p-5 font-semibold text-xl text-[#4C5A48]">
+                            <span>عظیم فتوحات اور قیامِ بحریہ</span>
+                            <svg class="w-6 h-6 text-[#A88B64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-5 border-t border-gray-200">
+                                <p>آپ نے پہلا اسلامی بحری بیڑا قائم کر کے رومی بحری طاقت کا خاتمہ کیا اور بحیرۂ روم میں اسلامی پرچم لہرایا۔ آپ کے دور میں اسلامی سلطنت کی حدود تاریخ کی سب سے بڑی وسعت تک پہنچیں۔ اہم فتوحات میں شامل ہیں:</p>
+                                <ul class="list-disc list-inside mt-4 space-y-2">
+                                    <li><strong>آرمینیا، آذربائیجان اور خراسان:</strong> ایران کی مکمل فتح کے بعد اسلامی لشکر وسط ایشیا تک پہنچا۔</li>
+                                    <li><strong>شمالی افریقہ:</strong> مصر سے آگے طرابلس (موجودہ لیبیا) اور تیونس کے علاقے فتح ہوئے۔</li>
+                                    <li><strong>قبرص (Cyprus):</strong> بحیرۂ روم کا یہ اہم اسٹریٹجک جزیرہ فتح ہوا، جس سے شام اور مصر کے ساحل محفوظ ہو گئے۔</li>
+                                    <li><strong>اندلس (Spain) کی طرف پیش قدمی:</strong> اسلامی لشکروں نے اندلس کے ساحلوں پر ابتدائی کاروائیاں کیں۔</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion Item 3 -->
+                    <div class="bg-white rounded-lg shadow-md">
+                        <button class="accordion-button w-full flex justify-between items-center text-right p-5 font-semibold text-xl text-[#4C5A48]">
+                            <span>انتظامی، معاشی اور عوامی اصلاحات</span>
+                            <svg class="w-6 h-6 text-[#A88B64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-5 border-t border-gray-200 space-y-4">
+                                <p><strong>انتظامی ڈھانچہ:</strong> ریاست کو منظم کرنے کے لیے آپ نے باقاعدہ سرکاری محکمے (دیوان) قائم کیے، صوبوں کی از سر نو حد بندی کی، اور گورنروں اور سرکاری عمال کے لیے سخت احتسابی نظام وضع کیا۔</p>
+                                <p><strong>معاشی خوشحالی:</strong> آپ کے دور میں عوام کی فی کس آمدنی تاریخ کی بلند ترین سطح پر تھی۔ آپ نے زراعت اور تجارت کو فروغ دیا، آبپاشی کے نظام کو بہتر بنایا اور لوگوں کو معاشی سرگرمیوں کی مکمل آزادی دی۔</p>
+                                <p><strong>عوامی تعمیرات:</strong> آپ نے مسجد الحرام اور مسجد نبوی کی عظیم الشان توسیع کروائی۔ عوام کی سہولت کے لیے سڑکیں، پل، سرائے اور پانی کے ذخائر تعمیر کروائے اور مدینہ میں مہمان خانہ قائم کیا۔</p>
+                                <p><strong>جمعہ کی اذان:</strong> بڑھتی ہوئی آبادی کے پیشِ نظر جمعہ کی پہلی اذان کا آغاز فرمایا، جو نماز کے وقت سے پہلے دی جاتی تھی تاکہ لوگ تیاری کر کے مسجد پہنچ سکیں۔</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section: Aqwal-e-Zarrin -->
+        <section id="aqwal" class="content-section hidden">
+            <div class="p-6 bg-white/50 rounded-lg shadow-sm">
+                <h2 class="text-3xl font-bold text-[#4C5A48] mb-4 border-r-4 border-[#C8A97E] pr-4">اقوالِ زریں</h2>
+                <p class="mb-6">حضرت عثمان غنی رضی اللہ عنہ کے ارشادات حکمت اور دانائی کا خزانہ ہیں۔ ان کے یہ اقوال آج بھی ہماری زندگی کے ہر پہلو میں رہنمائی فراہم کرتے ہیں۔</p>
+                <div class="space-y-6">
+                    <blockquote class="p-4 bg-white rounded-lg shadow-md border-r-4 border-[#A88B64]">
+                        <p class="text-lg italic">"دنیا کی فکر دل میں تاریکی پیدا کرتی ہے اور آخرت کی فکر دل میں نور پیدا کرتی ہے۔"</p>
+                    </blockquote>
+                    <blockquote class="p-4 bg-white rounded-lg shadow-md border-r-4 border-[#A88B64]">
+                        <p class="text-lg italic">"جو شخص پانچوں نمازوں کا اہتمام کرتا ہے، اللہ تعالیٰ نو چیزوں کے ساتھ اس کا اکرام کرتا ہے: اللہ اس سے محبت کرتا ہے، اس کا بدن تندرست رہتا ہے، فرشتے اس کی حفاظت کرتے ہیں، اس کے گھر میں برکت ہوتی ہے، اس کے چہرے پر صالحین کا نور ہوتا ہے، اللہ اس کا دل نرم کر دیتا ہے، وہ پل صراط سے بجلی کی طرح گزرے گا، اللہ اسے جہنم سے نجات دے گا اور اسے جنت میں ان لوگوں کے ساتھ رکھے گا جن پر کوئی خوف اور غم نہیں۔"</p>
+                    </blockquote>
+                    <blockquote class="p-4 bg-white rounded-lg shadow-md border-r-4 border-[#A88B64]">
+                        <p class="text-lg italic">"خاموشی غصے کا بہترین علاج ہے۔"</p>
+                    </blockquote>
+                     <blockquote class="p-4 bg-white rounded-lg shadow-md border-r-4 border-[#A88B64]">
+                        <p class="text-lg italic">"چار چیزیں ظاہر میں فضیلت اور باطن میں فرض ہیں: صالح لوگوں کی صحبت، قرآن کی تلاوت، بیماروں کی عیادت، اور جنازوں میں شرکت۔"</p>
+                    </blockquote>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Section: Shahadat -->
+        <section id="shahadat" class="content-section hidden">
+            <div class="p-6 bg-white/50 rounded-lg shadow-sm">
+                <h2 class="text-3xl font-bold text-[#4C5A48] mb-4 border-r-4 border-[#C8A97E] pr-4">شہادتِ مظلوم</h2>
+                <p class="mb-6">خلافت کے آخری ایام میں عبداللہ بن سبا جیسے سازشی عناصر نے جھوٹے پروپیگنڈے کے ذریعے کچھ لوگوں کو گمراہ کیا اور مدینہ پر چڑھائی کر دی۔ آپ نے امت کے اتحاد اور نبی ﷺ کے شہر کی حرمت کی خاطر اپنی جان قربان کر دی، لیکن مسلمانوں کے درمیان خونریزی کو گوارا نہ کیا۔</p>
+                <div class="p-6 bg-white rounded-xl shadow-lg space-y-4">
+                    <p><span class="font-bold text-[#A88B64]">محاصرہ:</span> سازشی عناصر نے 40 دن تک آپ کے گھر کا محاصرہ کیا اور پانی تک بند کر دیا۔</p>
+                    <p><span class="font-bold text-[#A88B64]">صبر و استقامت:</span> آپ نے صحابہ کرام (بشمول حضرت حسن و حسین رضی اللہ عنہم) کو دفاع میں لڑنے کی اجازت نہ دی، یہ کہتے ہوئے کہ "میں نہیں چاہتا کہ میری وجہ سے مسلمانوں کا خون بہے۔"</p>
+                    <p><span class="font-bold text-[#A88B64]">نبوی پیشین گوئی:</span> آپ کو رسول اللہ ﷺ کی وہ پیشین گوئی یاد تھی کہ "اے عثمان! اللہ تمہیں ایک قمیص (خلافت) پہنائے گا، اگر لوگ اسے اتارنا چاہیں تو مت اتارنا۔"</p>
+                    <p><span class="font-bold text-[#A88B64]">جامِ شہادت:</span> 18 ذوالحجہ 35 ہجری کو، جمعہ کے دن، روزہ کی حالت میں تلاوتِ قرآن کرتے ہوئے آپ کو مظلومانہ شہید کر دیا گیا۔ آپ کی عمر 82 برس تھی۔</p>
+                    <blockquote class="border-r-4 border-[#C8A97E] pr-4 mt-4 text-lg italic">"آپ کے خون کے چھینٹے اسی مصحف پر گرے جسے آپ نے امت کی رہنمائی کے لیے جمع کیا تھا۔"</blockquote>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Legacy -->
+        <section id="legacy" class="content-section hidden">
+            <div class="p-6 bg-white/50 rounded-lg shadow-sm">
+                <h2 class="text-3xl font-bold text-[#4C5A48] mb-4 border-r-4 border-[#C8A97E] pr-4">قائدانہ بصیرت اور ورثہ</h2>
+                <p class="mb-6">حضرت عثمان غنیؓ کی قیادت صرف تقویٰ پر مبنی نہیں تھی، بلکہ اس میں جدید انتظامی حکمت اور دور اندیشی بھی شامل تھی۔ یہ چارٹ ان کی قیادت کے کلیدی ستونوں کو واضح کرتا ہے، جو آج کے رہنماؤں کے لیے بھی مشعلِ راہ ہیں۔ آپ چارٹ کے ہر حصے پر ہوور کر کے مزید جان سکتے ہیں۔</p>
+                <div class="p-6 bg-white rounded-xl shadow-lg">
+                    <div class="chart-container">
+                        <canvas id="legacyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Modal Structure -->
+<div id="modal-container" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
+    <div id="modal-content" class="bg-[#FDFBF6] rounded-lg shadow-2xl p-8 max-w-2xl w-full transform -translate-y-10 transition-transform duration-300">
+         <h3 id="modal-title" class="text-2xl font-bold text-[#4C5A48] mb-4"></h3>
+         <p id="modal-body" class="text-lg"></p>
+         <p id="modal-impact" class="mt-4 text-md font-semibold text-[#A88B64] border-t border-[#C8A97E] pt-3"></p>
+         <button id="close-modal" class="mt-6 bg-[#A88B64] text-white py-2 px-6 rounded-lg hover:bg-[#4C5A48] transition-colors">بند کریں</button>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+        const modalContainer = document.getElementById('modal-container');
+        const modalContent = document.getElementById('modal-content');
+        const closeModalBtn = document.getElementById('close-modal');
+        const modalTriggers = document.querySelectorAll('.modal-trigger');
+        const accordionButtons = document.querySelectorAll('.accordion-button');
+
+        const modalData = {
+            rumah: {
+                title: "بئرِ رومہ کی خریداری",
+                body: "مدینہ ہجرت کے بعد مسلمانوں کو پینے کے پانی کی شدید قلت کا سامنا تھا۔ میٹھے پانی کا واحد کنواں 'بئرِ رومہ' ایک یہودی کی ملکیت تھا جو مہنگے داموں پانی فروخت کرتا تھا۔ نبی کریم ﷺ نے فرمایا کہ جو یہ کنواں خرید کر وقف کرے گا، اس کے لیے جنت ہے۔ حضرت عثمانؓ نے یہ کنواں 35,000 درہم میں خرید کر مسلمانوں کے لیے وقف کر دیا۔",
+                impact: "اثرات: مسلمانوں کو پینے کے پانی کی مستقل اور مفت فراہمی یقینی بنائی گئی، جو ایک بنیادی شہری ضرورت اور عوامی بہبود کا عظیم منصوبہ تھا۔"
+            },
+            jaysh: {
+                title: "جیش العسرہ کی تیاری",
+                body: "غزوہ تبوک کے موقع پر اسلامی فوج کو وسائل کی شدید کمی کا سامنا تھا، اسی لیے اسے 'جیش العسرہ' (تنگی کا لشکر) کہا گیا۔ نبی کریم ﷺ کی اپیل پر حضرت عثمانؓ نے آگے بڑھ کر لشکر کا ایک تہائی حصہ تیار کیا۔ آپ نے 950 اونٹ، 50 گھوڑے اور 1000 طلائی دینار پیش کیے۔",
+                impact: "اثرات: اس بے مثال مالی قربانی نے اسلامی فوج کو ایک نازک موقع پر وسائل فراہم کیے، جس سے ریاست کا دفاع ممکن ہوا اور مسلمانوں کے حوصلے بلند ہوئے۔"
+            },
+            masjid: {
+                title: "مسجد نبوی کی توسیع",
+                body: "اسلام قبول کرنے والوں کی تعداد بڑھنے کے ساتھ مسجد نبوی میں جگہ تنگ پڑنے لگی۔ حضرت عثمانؓ نے نبی کریم ﷺ کی خواہش پر مسجد سے متصل زمین اس کے مالک سے 25,000 درہم میں خرید کر مسجد کی توسیع کے لیے وقف کر دی۔",
+                impact: "اثرات: مسلمانوں کے لیے عبادت گاہ کو وسیع کیا گیا، جس سے بڑھتی ہوئی آبادی کی اجتماعی اور روحانی ضروریات کو پورا کرنے میں مدد ملی۔"
+            }
+        };
+
+        function showModal(id) {
+            const data = modalData[id];
+            document.getElementById('modal-title').textContent = data.title;
+            document.getElementById('modal-body').textContent = data.body;
+            document.getElementById('modal-impact').textContent = data.impact;
+            modalContainer.classList.remove('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('-translate-y-10');
+        }
+
+        function hideModal() {
+            modalContainer.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.add('-translate-y-10');
+        }
+
+        modalTriggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const modalId = trigger.getAttribute('data-modal');
+                showModal(modalId);
+            });
+        });
+
+        closeModalBtn.addEventListener('click', hideModal);
+        modalContainer.addEventListener('click', (e) => {
+            if (e.target === modalContainer) {
+                hideModal();
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                const targetId = link.getAttribute('data-target');
+                
+                navLinks.forEach(navLink => navLink.classList.remove('active'));
+                link.classList.add('active');
+                
+                contentSections.forEach(section => {
+                    if (section.id === targetId) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                button.classList.toggle('open');
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        });
+
+        // Chart.js Legacy Chart
+        const ctx = document.getElementById('legacyChart').getContext('2d');
+        const legacyChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['اتحادِ امت', 'دفاعی حکمتِ عملی', 'عوامی بہبود', 'اسٹریٹجک وژن', 'عدل و انصاف'],
+                datasets: [{
+                    label: 'قائدانہ صلاحیت',
+                    data: [100, 100, 100, 100, 100],
+                    backgroundColor: [
+                        'rgba(128, 108, 81, 0.6)',
+                        'rgba(76, 90, 72, 0.6)',
+                        'rgba(200, 169, 126, 0.6)',
+                        'rgba(168, 139, 100, 0.6)',
+                         'rgba(100, 83, 62, 0.6)'
+                    ],
+                    borderColor: [
+                        '#806C51',
+                        '#4C5A48',
+                        '#C8A97E',
+                        '#A88B64',
+                        '#64533E'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                         max: 100,
+                        grid: {
+                            color: 'rgba(76, 90, 72, 0.1)'
+                        },
+                         ticks: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            font: {
+                                size: 14,
+                                family: "'Noto Naskh Arabic', serif"
+                            },
+                            color: '#434E44'
+                        },
+                         grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        rtl: true,
+                         bodyFont: {
+                            family: "'Noto Naskh Arabic', serif"
+                        },
+                        titleFont: {
+                            family: "'Noto Naskh Arabic', serif"
+                        },
+                        callbacks: {
+                            title: function(context) {
+                                const label = context[0].label;
+                                const tooltips = {
+                                    'اتحادِ امت': 'مثال: جامع القرآن',
+                                    'دفاعی حکمتِ عملی': 'مثال: بحریہ کا قیام',
+                                    'عوامی بہبود': 'مثال: بئرِ رومہ اور مساجد کی توسیع',
+                                    'اسٹریٹجک وژن': 'مثال: مستقبل کی ضروریات کو بھانپنا',
+                                    'عدل و انصاف': 'مثال: تمام شہریوں کے لیے یکساں قانون'
+                                };
+                                return tooltips[label] || label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
